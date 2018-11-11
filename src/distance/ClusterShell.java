@@ -1,6 +1,6 @@
-package main;
+package distance;
 
-import exceptions.UnimplementedMethodException;
+import exceptions.DeprecatedMethodException;
 
 public class ClusterShell {
 	private DistanceFactory fact;
@@ -8,7 +8,7 @@ public class ClusterShell {
 	public ClusterShell(DistanceFactory in_fact) {
 		fact = in_fact;
 	}
-	public DVPCalcResult calculate(DistanceVectorPair d) throws UnimplementedMethodException 
+	public DVPCalcResult calculate(DistanceVectorPair d) throws DeprecatedMethodException, IllegalArgumentException 
 	{
 		return fact.makeDistanceCalculator().calculate(d);
 	}

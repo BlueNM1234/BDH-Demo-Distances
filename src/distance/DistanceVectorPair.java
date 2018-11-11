@@ -1,4 +1,4 @@
-package main;
+package distance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,26 @@ public class DistanceVectorPair {
 	private List<Double> vals1;
 	private List<Double> vals2;
 
-	public DistanceVectorPair(List<Double> in_vals1, List<Double> in_vals2) 
+	/**
+	 * This method is private to prevent any invalid constructions.
+	 * Alternatively, the validation could be in this method and throw IllegalArgumentException.
+	 * 
+	 */
+	   
+	private DistanceVectorPair(List<Double> in_vals1, List<Double> in_vals2) 
 	{
 		vals1 = in_vals1;
 		vals2 = in_vals2;
 	}
 			
+	 /**
+	   * This method is used to validate a pair of string vectors
+	   * and, if they are all numeric values and of the same length,
+	   * convert them and return a DistanceVectorPair. Otherwise return null.
+	   * @param strVals1 The first input vector of strings
+	   * @param strVals2 The second input vector of strings
+	   * @return DistanceValuePair of the two inputs, or null if validation fails.
+	   */
 	public static DistanceVectorPair makePair(List<String> strVals1, List<String> strVals2) {
 		List<Double> tvals1 = new ArrayList<Double>();
 		List<Double> tvals2 = new ArrayList<Double>();

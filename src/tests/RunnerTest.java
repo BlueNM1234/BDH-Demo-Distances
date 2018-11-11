@@ -1,14 +1,20 @@
 package tests;
-
+/**
+ * Test cases for the Runner class
+ * 
+ * @author B Den Hartog
+ *
+ */ 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import main.ClusterShell;
-import main.DVPCalcResult;
-import main.DistanceFactory;
-import main.DistanceVectorPair;
-import exceptions.UnimplementedMethodException;
+import distance.ClusterShell;
+import distance.DVPCalcResult;
+import distance.DistanceFactory;
+import distance.DistanceFactory.DistanceMeasure;
+import distance.DistanceVectorPair;
+import exceptions.DeprecatedMethodException;
 import junit.framework.TestCase;
 
 public class RunnerTest extends TestCase {
@@ -17,90 +23,120 @@ public class RunnerTest extends TestCase {
 
 	DistanceVectorPair dvp1 = DistanceVectorPair.makePair(ok1, ok3);
 	
+	/**
+	 * Test valid inputs on valid method and assert that the resulting distance is correct.
+	 */
 	public void testTaxi() {
 		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory("TX"));
-		DVPCalcResult dist;
 		try {
-			dist = cs.calculate(dvp1);
+			ClusterShell cs = new ClusterShell(new DistanceFactory(DistanceMeasure.TAXICAB));
+			DVPCalcResult dist = cs.calculate(dvp1);
 			System.out.println(dist.toString());
-			assertEquals(6.0, dist.getDistance(),0);
-		} catch (UnimplementedMethodException e) {
-			thrown = true;
-		} 
-		assertFalse(thrown);
-	}
-
-	public void testEuclid() {
-		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory("EU"));
-		DVPCalcResult dist;
-		try {
-			dist = cs.calculate(dvp1);
-			System.out.println(dist.toString());
-			assertEquals(4.472, dist.getDistance(),.001);
-		} catch (UnimplementedMethodException e) {
-			thrown = true;
-		} 
-		assertFalse(thrown);
-	}
-
-	public void testDefault() {
-		//Euclid
-		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory());
-		DVPCalcResult dist;
-		try {
-			dist = cs.calculate(dvp1);
-			System.out.println(dist.toString());
-			assertEquals(4.472, dist.getDistance(),.001);
-		} catch (UnimplementedMethodException e) {
-			thrown = true;
-		} 
-		assertFalse(thrown);
-	}
-
-	public void testChebyshev() {
-		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory("CH"));
-		DVPCalcResult dist;
-		try {
-			dist = cs.calculate(dvp1);
-			System.out.println(dist.toString());
-			assertEquals(4.0, dist.getDistance(),0);
-		} catch (UnimplementedMethodException e) {
-			thrown = true;
-		} 
-		assertFalse(thrown);
-	}
-
-	public void testFuture() {
-		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory("CS"));
-		DVPCalcResult dist;
-		try {
-			dist = cs.calculate(dvp1);
-			System.out.println(dist.toString());
-			assertEquals(4.472, dist.getDistance(),.001);
-		} catch (UnimplementedMethodException e) {
+			assertEquals(6.0, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 			thrown = true;
-		} 
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
+		}
+		assertFalse(thrown);
+	}
+	/**
+	 * Test valid inputs on valid method and assert that the resulting distance is correct.
+	 */
+	public void testEuclid() {
+		boolean thrown = false;
+		try {
+			ClusterShell cs = new ClusterShell(new DistanceFactory(DistanceMeasure.EUCLIDEAN));
+			DVPCalcResult dist = cs.calculate(dvp1);
+			System.out.println(dist.toString());
+			assertEquals(4.472, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			thrown = true;
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
+		}
+		assertFalse(thrown);
+	}
+	
+	/**
+	 * Test valid inputs on valid method and assert that the resulting distance is correct.
+	 * Uses default method (Euclidean)
+	 */
+	public void testDefault() {
+		boolean thrown = false;
+		try {
+			ClusterShell cs = new ClusterShell(new DistanceFactory());
+			DVPCalcResult dist = cs.calculate(dvp1);
+			System.out.println(dist.toString());
+			assertEquals(4.472, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			thrown = true;
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
+		}
+		assertFalse(thrown);
+	}
+	
+	/**
+	 * Test valid inputs on valid method and assert that the resulting distance is correct.
+	 */
+	public void testChebyshev() {
+		boolean thrown = false;
+		try {
+			ClusterShell cs = new ClusterShell(new DistanceFactory(DistanceMeasure.CHEBYSHEV));
+			DVPCalcResult dist = cs.calculate(dvp1);
+			System.out.println(dist.toString());
+			assertEquals(4, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+			thrown = true;
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
+		}
+		assertFalse(thrown);
+	}
+	
+	/**
+	 * Test a method that is no longer supported. Assert that DeprecatedMethodException is thrown.
+	 */
+	public void testDeprecated() {
+		boolean thrown = false;
+		try {
+			ClusterShell cs = new ClusterShell(new DistanceFactory(DistanceMeasure.COSINE));
+			DVPCalcResult dist = cs.calculate(dvp1);
+			System.out.println(dist.toString());
+			assertEquals(4.472, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
+			System.out.println(e.getMessage());
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
+			thrown = true;
+		}
 		assertTrue(thrown);
 	}
 
+
+	/**
+	 * Test a null DistanceMeasure enum; verify that IllegalArgumentException occurs.
+	 */
 	public void testUnknown() {
 		boolean thrown = false;
-		ClusterShell cs = new ClusterShell(new DistanceFactory("XX"));
-		DVPCalcResult dist;
+			
 		try {
-			dist = cs.calculate(dvp1);
+			ClusterShell cs = new ClusterShell(new DistanceFactory(null));
+			DVPCalcResult dist = cs.calculate(dvp1);
 			System.out.println(dist.toString());
-			assertEquals(4.472, dist.getDistance(),.001);
-		} catch (Exception e) {
+			assertEquals(5.472, dist.getDistance(),.001);
+		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 			thrown = true;
+		} catch (DeprecatedMethodException e) {
+			System.out.println(e.getMessage());
 		} 
+		
 		assertTrue(thrown);
 	}
 }

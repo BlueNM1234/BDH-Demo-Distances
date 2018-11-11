@@ -1,6 +1,14 @@
-package main;
+package distance;
 
-public class DVPCalcResult {
+/**
+ * A reporting class to record what measure and inputs were used, 
+ * as well as the final distance calculated.
+ * 
+ * @author B Den Hartog
+ *
+ */ 
+ public class DVPCalcResult {
+  
 	private String calcName;
 	private double distance;
 	private DistanceVectorPair inputs;
