@@ -1,5 +1,11 @@
 package distance;
-
+/**
+* This class organizes and validates the inputs 
+* to a distance measure calculation.
+* 
+* @author  Bobi Den Hartog
+* 
+*/
 import java.util.ArrayList;
 import java.util.List;
 
